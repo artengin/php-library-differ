@@ -49,7 +49,8 @@ function findDiff(array $first, array $second): string
         $acc[] = "+ {$key}: {$secondValue}";
         return $acc;
     }, []);
-    return implode("\n", $resultDiff);
+    $resultDiffString = implode("\n", $resultDiff);
+    return $resultDiffString;
 }
 function isBool($string)
 {
