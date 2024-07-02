@@ -1,4 +1,4 @@
-name: roman-numerals-converter
+name: genDiff
 on: push
 jobs:
     build:
@@ -6,6 +6,5 @@ jobs:
         steps:
         - uses: actions/checkout@v3
         - run: make install
-        - run: make update
         - run: make test
         - run: make lint
