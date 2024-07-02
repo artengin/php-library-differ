@@ -1,26 +1,16 @@
-#!/usr/bin/env php
 <?php
 
 namespace Differ\Differ;
 
+use function Differ\Parser\parser;
+
 function genDiff(string $file1, string $file2): string
 {
-    $contentFirstFile = parseContent($file1);
-    $contentSecondFile = parseContent($file2);
+    $contentFirstFile = parser($file1);
+    $contentSecondFile = parser($file2);
 
     $contentDiff = findDiff($contentFirstFile, $contentSecondFile);
     return $contentDiff;
-}
-
-function parseContent(string $path): array
-{
-    if (!file_exists($path)) {
-        throw new \Exception("Invalid file path: {$path}");
-    }
-
-    $content = file_get_contents($path);
-    $decodeContent = json_decode($content, true);
-    return $decodeContent;
 }
 
 function findDiff(array $first, array $second): string
@@ -29,11 +19,11 @@ function findDiff(array $first, array $second): string
     ksort($mergeArray);
 
     $resultDiff = array_reduce(array_keys($mergeArray), function ($acc, $key) use ($first, $second) {
-        $firstValue = isBool($first[$key]);
-        $secondValue = isBool($second[$key]);
         $checkFirst = array_key_exists($key, $first);
         $checkSecond = array_key_exists($key, $second);
         if ($checkFirst && $checkSecond) {
+            $firstValue = isBool($first[$key]);
+            $secondValue = isBool($second[$key]);
             if ($first[$key] === $second[$key]) {
                 $acc[] = "  {$key}: {$firstValue}";
                 return $acc;
@@ -43,9 +33,11 @@ function findDiff(array $first, array $second): string
             return $acc;
         }
         if ($checkFirst) {
+            $firstValue = isBool($first[$key]);
             $acc[] = "- {$key}: {$firstValue}";
             return $acc;
         }
+        $secondValue = isBool($second[$key]);
         $acc[] = "+ {$key}: {$secondValue}";
         return $acc;
     }, []);
