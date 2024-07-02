@@ -1,0 +1,11 @@
+name: roman-numerals-converter
+on: push
+jobs:
+    build:
+        runs-on: ubuntu-24.04
+        steps:
+        - uses: actions/checkout@v3
+        - run: make install
+        - run: make update
+        - run: make test
+        - run: make lint

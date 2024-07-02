@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use function Differ\Differ\genDiff;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $doc = <<<DOC
@@ -18,3 +20,9 @@ Options:
 DOC;
 
 $args = Docopt::handle($doc, ['version' => '1.0']);
+
+$firsFilePath = $args['<firstFile>'];
+$secondFilePath = $args['<secondFile>'];
+
+$diff = genDiff($firsFilePath, $secondFilePath);
+print_r($diff);
