@@ -29,30 +29,27 @@ function findDiff(array $first, array $second): string
     ksort($mergeArray);
 
     $resultDiff = array_reduce(array_keys($mergeArray), function ($acc, $key) use ($first, $second) {
+        $firstValue = isBool($first[$key]);
+        $secondValue = isBool($second[$key]);
         $checkFirst = array_key_exists($key, $first);
         $checkSecond = array_key_exists($key, $second);
         if ($checkFirst && $checkSecond) {
             if ($first[$key] === $second[$key]) {
-                $firstValue = isBool($first[$key]);
                 $acc[] = "  {$key}: {$firstValue}";
                 return $acc;
             }
-            $firstValue = isBool($first[$key]);
-            $secondValue = isBool($second[$key]);
             $acc[] = "- {$key}: {$firstValue}";
             $acc[] = "+ {$key}: {$secondValue}";
             return $acc;
         }
         if ($checkFirst) {
-            $firstValue = isBool($first[$key]);
             $acc[] = "- {$key}: {$firstValue}";
             return $acc;
         }
-        $secondValue = isBool($second[$key]);
         $acc[] = "+ {$key}: {$secondValue}";
         return $acc;
     }, []);
-    return implode("\n", $resultDiff) . "\n";
+    return implode("\n", $resultDiff);
 }
 function isBool($string)
 {
