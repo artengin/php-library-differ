@@ -13,14 +13,9 @@ function parser(string $path): array
     $content = file_get_contents($path);
     $extension = pathinfo($path, PATHINFO_EXTENSION);
 
-    switch ($extension) {
-        case "json":
-            return json_decode($content, true);
-        case "yml":
-            return Yaml::parse($content);
-        case "yaml":
-            return Yaml::parse($content);
-        default:
-            throw new \Exception("Format {$extension} not supported.");
-    }
+    return match ($extension) {
+        "json" => json_decode($content, true),
+        "yml", "yaml" => Yaml::parse($content),
+        default => throw new \Exception("Format {$extension} not supported."),
+    };
 }

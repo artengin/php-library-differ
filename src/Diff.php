@@ -2,55 +2,72 @@
 
 namespace Differ\Differ;
 
+use function Differ\Formatter\formatter;
 use function Differ\Parser\parser;
 
-function genDiff(string $file1, string $file2): string
-{
-    $contentFirstFile = parser($file1);
-    $contentSecondFile = parser($file2);
+const UNCHANGED = 'unchanged';
+const CHANGED = 'changed';
+const ADDED = 'added';
+const DELETED = 'deleted';
+const NESTED = 'nested';
 
-    $contentDiff = findDiff($contentFirstFile, $contentSecondFile);
-    return $contentDiff;
+function genDiff(string $file1, string $file2, $format = 'stylish'): string
+{
+    $valueFile1 = parser($file1);
+    $valueFile2 = parser($file2);
+    $valueDiff = buildDiff($valueFile1, $valueFile2);
+    return formatter($valueDiff, $format);
 }
 
-function findDiff(array $first, array $second): string
+function buildDiff(array $first, array $second): array
 {
     $mergeArray = array_merge($first, $second);
     ksort($mergeArray);
 
-    $resultDiff = array_reduce(array_keys($mergeArray), function ($acc, $key) use ($first, $second) {
-        $checkFirst = array_key_exists($key, $first);
-        $checkSecond = array_key_exists($key, $second);
-        if ($checkFirst && $checkSecond) {
-            $firstValue = isBool($first[$key]);
-            $secondValue = isBool($second[$key]);
-            if ($first[$key] === $second[$key]) {
-                $acc[] = "  {$key}: {$firstValue}";
-                return $acc;
-            }
-            $acc[] = "- {$key}: {$firstValue}";
-            $acc[] = "+ {$key}: {$secondValue}";
-            return $acc;
+    return array_map(function ($key) use ($first, $second) {
+        $valueFirst = $first[$key] ?? null;
+        $valueSecond = $second[$key] ?? null;
+
+        if (
+            (is_array($valueFirst) && !array_is_list($valueFirst)) &&
+            (is_array($valueSecond) && !array_is_list($valueSecond))
+        ) {
+            return [
+                'compare' => NESTED,
+                'key' => $key,
+                'value' => buildDiff($valueFirst, $valueSecond),
+            ];
         }
-        if ($checkFirst) {
-            $firstValue = isBool($first[$key]);
-            $acc[] = "- {$key}: {$firstValue}";
-            return $acc;
+
+        if (!array_key_exists($key, $first)) {
+            return [
+                'compare' => ADDED,
+                'key' => $key,
+                'value' => $valueSecond,
+            ];
         }
-        $secondValue = isBool($second[$key]);
-        $acc[] = "+ {$key}: {$secondValue}";
-        return $acc;
-    }, []);
-    $resultDiffString = implode("\n", $resultDiff);
-    return $resultDiffString;
-}
-function isBool($string)
-{
-    if ($string === false) {
-        return 'false';
-    }
-    if ($string === true) {
-        return 'true';
-    }
-    return $string;
+
+        if (!array_key_exists($key, $second)) {
+            return [
+                'compare' => DELETED,
+                'key' => $key,
+                'value' => $valueFirst,
+            ];
+        }
+
+        if ($valueFirst === $valueSecond) {
+            return [
+                'compare' => UNCHANGED,
+                'key' => $key,
+                'value' => $valueFirst,
+            ];
+        }
+
+        return [
+            'compare' => CHANGED,
+            'key' => $key,
+            'valueFirst' => $valueFirst,
+            'valueSecond' => $valueSecond,
+        ];
+    }, array_keys($mergeArray));
 }

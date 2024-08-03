@@ -10,6 +10,7 @@
         "files": [
             "src/Diff.php",
             "src/Parser.php",
+            "src/Formatter.php",
             "tests/DiffTest.php"
         ]
     },

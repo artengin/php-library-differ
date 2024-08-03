@@ -11,18 +11,19 @@ Generate diff
 Usage:
   gendiff (-h|--help)
   gendiff (-v|--version)
-  gendiff [--format <fmt>] <firstFile> <secondFile>
+  gendiff [-f|--format <fmt>] <firstFile> <secondFile>
 
 Options:
   -h --help                     Show this screen.
   -v --version                  Show version.
-  --format <fmt>                Report format [default: stylish]
+  -f --format <fmt>             Report format [default: stylish]
 DOC;
 
 $args = Docopt::handle($doc, ['version' => '1.0']);
 
 $firsFilePath = $args['<firstFile>'];
 $secondFilePath = $args['<secondFile>'];
+$format = $args['--format'];
 
-$diff = genDiff($firsFilePath, $secondFilePath);
+$diff = genDiff($firsFilePath, $secondFilePath, $format);
 print_r($diff);
