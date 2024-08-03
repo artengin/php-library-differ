@@ -18,10 +18,9 @@ const COMPARE_TEXT_SYMBOL_MAP = [
     UNCHANGED => ' ',
 ];
 
-function format(array $data, int $depth = 0): string
+function format(array $data, int $depth = 1): string
 {
     $fun = function ($acc, $value) use ($depth) {
-        $depth++;
         $indentSize = ($depth * SPACECOUNT) - 2;
         $currentIndent = str_repeat(REPLACER, $indentSize);
 
@@ -30,8 +29,8 @@ function format(array $data, int $depth = 0): string
         $compareSymbol = COMPARE_TEXT_SYMBOL_MAP[$compare];
 
         if ($compare === CHANGED) {
-            $val1 = stringify($value['valueFirst'], $depth);
-            $val2 = stringify($value['valueSecond'], $depth);
+            $val1 = stringify($value['valueFirst'], $depth + 1);
+            $val2 = stringify($value['valueSecond'], $depth + 1);
             $acc[] = sprintf(
                 "%s%s %s: %s\n",
                 $currentIndent,
@@ -50,9 +49,9 @@ function format(array $data, int $depth = 0): string
         }
 
         if ($compare === NESTED) {
-            $val = format($value['value'], $depth);
+            $val = format($value['value'], $depth + 1);
         } else {
-            $val = stringify($value['value'], $depth);
+            $val = stringify($value['value'], $depth + 1);
         }
         $acc[] = sprintf(
             "%s%s %s: %s\n",
@@ -66,7 +65,7 @@ function format(array $data, int $depth = 0): string
     $result = array_reduce($data, $fun, []);
 
     $closeBracketIndentSize = $depth * SPACECOUNT;
-    $closeBracketIndent = $closeBracketIndentSize > 0 ? str_repeat(REPLACER, $closeBracketIndentSize) : '';
+    $closeBracketIndent = $closeBracketIndentSize > 0 ? str_repeat(REPLACER, $closeBracketIndentSize - SPACECOUNT) : '';
 
     return "{\n" . implode($result) . "{$closeBracketIndent}}";
 }
@@ -77,7 +76,6 @@ function stringify(mixed $value, int $depth)
     if (!is_array($value)) {
         return toString($value);
     }
-    $depth++;
     $indentSize = $depth * SPACECOUNT;
     $currentIndent = str_repeat(REPLACER, $indentSize);
     $fun = function ($key, $val) use ($depth, $currentIndent) {
@@ -85,7 +83,7 @@ function stringify(mixed $value, int $depth)
             "%s%s: %s\n",
             $currentIndent,
             $key,
-            stringify($val, $depth),
+            stringify($val, $depth + 1),
         );
     };
     $result = array_map($fun, array_keys($value), $value);
