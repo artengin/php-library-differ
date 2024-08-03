@@ -11,6 +11,9 @@
             "src/Diff.php",
             "src/Parser.php",
             "src/Formatter.php",
+            "src/Formatters/Json.php",
+            "src/Formatters/Stylish.php",
+            "src/Formatters/Plain.php",
             "tests/DiffTest.php"
         ]
     },
