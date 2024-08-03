@@ -94,7 +94,7 @@ function stringify(mixed $value, int $depth)
     return "{\n" . implode($result) . "{$closeBracketIndent}}";
 }
 
-function toString($value)
+function toString(mixed $value): string
 {
     if (is_null($value)) {
         return 'null';

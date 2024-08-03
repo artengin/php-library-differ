@@ -27,11 +27,11 @@
         "bin/gendiff"
       ],
     "require": {
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "symfony/yaml": "^7.1"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.10",
-        "phpunit/phpunit": "^11.2",
-        "symfony/yaml": "^7.1"
+        "phpunit/phpunit": "^11.2"
     }
 }
