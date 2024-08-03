@@ -11,7 +11,7 @@ const ADDED = 'added';
 const DELETED = 'deleted';
 const NESTED = 'nested';
 
-function genDiff(string $file1, string $file2, $format = 'stylish'): string
+function genDiff(string $file1, string $file2, string $format = 'stylish'): string
 {
     $valueFile1 = parser($file1);
     $valueFile2 = parser($file2);

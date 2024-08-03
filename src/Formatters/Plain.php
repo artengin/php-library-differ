@@ -22,7 +22,7 @@ function format(array $data): string
     return rtrim($result, " \n");
 }
 
-function iter($value, $acc = [])
+function iter(mixed $value, array $acc = [])
 {
     if (!is_array($value)) {
         return toString($value);
