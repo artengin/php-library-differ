@@ -12,7 +12,6 @@ function parser(string $path): array
 
     $content = file_get_contents($path);
     $extension = pathinfo($path, PATHINFO_EXTENSION);
-    var_dump($content);
     return match ($extension) {
         "json" => jsonFileParse($content),
         "yml", "yaml" => yamlFileParse($content),
@@ -20,12 +19,12 @@ function parser(string $path): array
     };
 }
 
-function jsonFileParse(string $data): array
+function jsonFileParse($data): array
 {
     return json_decode($data, true, 512, JSON_THROW_ON_ERROR);
 }
 
-function yamlFileParse(string $data): array
+function yamlFileParse($data): array
 {
     return Yaml::parse($data);
 }
