@@ -12,7 +12,7 @@ function parser(string $path): array
 
     $content = file_get_contents($path);
     $extension = pathinfo($path, PATHINFO_EXTENSION);
-
+    var_dump($content);
     return match ($extension) {
         "json" => jsonFileParse($content),
         "yml", "yaml" => yamlFileParse($content),

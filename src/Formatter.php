@@ -12,5 +12,6 @@ function formatter(array $diff, string $format): string
         'stylish' => Stylish\format($diff),
         'json' => Json\format($diff),
         'plain' => Plain\format($diff),
+        default => throw new \Exception(sprintf('Unknown data format: "%s"!', $format)),
     };
 }
