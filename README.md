@@ -20,3 +20,17 @@ make install
 ```
 gendiff -h
 ```
+##### Demo №1:
+[![asciicast](https://asciinema.org/a/sTvxysQE3AXitn0RGGX2wvEXV.svg)](https://asciinema.org/a/sTvxysQE3AXitn0RGGX2wvEXV)
+
+##### Demo №2:
+[![asciicast](https://asciinema.org/a/5bSMTEmd5KFPOWNI8SO07oCDZ.svg)](https://asciinema.org/a/5bSMTEmd5KFPOWNI8SO07oCDZ)
+
+##### Demo №3:
+[![asciicast](https://asciinema.org/a/LijGk9ajnYZxG6DWeJITjRXp4.svg)](https://asciinema.org/a/LijGk9ajnYZxG6DWeJITjRXp4)
+
+##### Demo №4:
+[![asciicast](https://asciinema.org/a/5zjilbZpmXIuRI1rTrigqzu0r.svg)](https://asciinema.org/a/5zjilbZpmXIuRI1rTrigqzu0r)
+
+##### Demo №5:
+[![asciicast](https://asciinema.org/a/0TcuTOyX9aXoRPmTt9clO7j2V.svg)](https://asciinema.org/a/0TcuTOyX9aXoRPmTt9clO7j2V)
