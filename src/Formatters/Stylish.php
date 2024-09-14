@@ -20,7 +20,7 @@ const COMPARE_TEXT_SYMBOL_MAP = [
 
 function format(array $data, int $depth = 1): string
 {
-    $fun = function ($acc, $value) use ($depth) {
+    $fun = function ($value) use ($depth) {
         $indentSize = ($depth * SPACECOUNT) - 2;
         $currentIndent = str_repeat(REPLACER, $indentSize);
 
@@ -31,21 +31,21 @@ function format(array $data, int $depth = 1): string
         if ($compare === CHANGED) {
             $val1 = stringify($value['valueFirst'], $depth + 1);
             $val2 = stringify($value['valueSecond'], $depth + 1);
-            $acc[] = sprintf(
+            $result1 = sprintf(
                 "%s%s %s: %s\n",
                 $currentIndent,
                 COMPARE_TEXT_SYMBOL_MAP[DELETED],
                 $key,
                 $val1,
             );
-            $acc[] = sprintf(
+            $result2 = sprintf(
                 "%s%s %s: %s\n",
                 $currentIndent,
                 COMPARE_TEXT_SYMBOL_MAP[ADDED],
                 $key,
                 $val2,
             );
-            return $acc;
+            return $result1 . $result2;
         }
 
         if ($compare === NESTED) {
@@ -53,16 +53,16 @@ function format(array $data, int $depth = 1): string
         } else {
             $val = stringify($value['value'], $depth + 1);
         }
-        $acc[] = sprintf(
+        $result3 = sprintf(
             "%s%s %s: %s\n",
             $currentIndent,
             $compareSymbol,
             $key,
             $val,
         );
-        return $acc;
+        return $result3;
     };
-    $result = array_reduce($data, $fun, []);
+    $result = array_map($fun, $data);
 
     $closeBracketIndentSize = $depth * SPACECOUNT;
     $closeBracketIndent = $closeBracketIndentSize > 0 ? str_repeat(REPLACER, $closeBracketIndentSize - SPACECOUNT) : '';
