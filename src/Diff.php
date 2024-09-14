@@ -2,6 +2,7 @@
 
 namespace Differ\Differ;
 
+use function Functional\sort;
 use function Differ\Formatter\formatter;
 use function Differ\Parser\parser;
 
@@ -21,8 +22,10 @@ function genDiff(string $file1, string $file2, string $format = 'stylish'): stri
 
 function buildDiff(array $first, array $second): array
 {
-    $mergeArray = array_merge($first, $second);
-    ksort($mergeArray);
+    $uniqueKeys = array_unique(array_merge(array_keys($first), array_keys($second)));
+    $sortedArray = sort($uniqueKeys, function ($first, $second) {
+        return $first <=> $second;
+    });
 
     return array_map(function ($key) use ($first, $second) {
         $valueFirst = $first[$key] ?? null;
@@ -69,5 +72,5 @@ function buildDiff(array $first, array $second): array
             'valueFirst' => $valueFirst,
             'valueSecond' => $valueSecond,
         ];
-    }, array_keys($mergeArray));
+    }, $sortedArray);
 }
