@@ -1,0 +1,13 @@
+{"version": 2, "width": 121, "height": 6, "timestamp": 1726330633, "env": {"SHELL": "/bin/bash", "TERM": "xterm-256color"}}
+[0.014071, "o", "\u001b[?2004h\u001b]0;art@Art-ThinkPad: /var/www/html/php-project-48\u0007\u001b[01;32mart@Art-ThinkPad\u001b[00m:\u001b[01;34m/var/www/html/php-project-48\u001b[00m$ "]
+[0.592327, "o", "exit"]
+[0.727186, "o", "\b\b\b\b./bin/gendiff --format plain tests/fixtures/file1.json tests/fixtures/file2.yml"]
+[2.234928, "o", "\r\n\u001b[?2004l\r"]
+[2.269289, "o", "Property 'common.follow' was added with value: false\r\nProperty 'common.setting2' was removed\r\nProperty 'common.setting3' was updated. From true to null\r\nProperty 'common.setting4' was added with value: 'blah blah'\r\nProperty 'common.setting5' was added with value: [complex value]\r\nProperty 'common.setting6.doge.wow' was updated. From '' to 'so much'\r\nProperty 'common.setting6.ops' was added with value: 'vops'\r\nProperty 'group1.baz' was updated. From 'bas' to 'bars'\r\nProperty 'group1.nest' was updated. From [complex value] to 'str'\r\nProperty 'group2' was removed\r\nProperty 'group3' was added with value: [complex value]"]
+[2.272612, "o", "\u001b[?2004h\u001b]0;art@Art-ThinkPad: /var/www/html/php-project-48\u0007\u001b[01;32mart@Art-ThinkPad\u001b[00m:\u001b[01;34m/var/www/html/php-project-48\u001b[00m$ "]
+[4.169879, "o", "e"]
+[4.440074, "o", "x"]
+[4.59796, "o", "i"]
+[4.777952, "o", "t"]
+[5.24999, "o", "\r\n\u001b[?2004l\r"]
+[5.250115, "o", "exit\r\n"]
