@@ -19,12 +19,12 @@ function parser(string $path): array
     };
 }
 
-function jsonFileParse($data): array
+function jsonFileParse(string $data): array
 {
     return json_decode($data, true, 512, JSON_THROW_ON_ERROR);
 }
 
-function yamlFileParse($data): array
+function yamlFileParse(string $data): array
 {
     return Yaml::parse($data);
 }
