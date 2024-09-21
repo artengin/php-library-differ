@@ -1,9 +1,9 @@
 <?php
 
-namespace Differ\Differ;
+namespace Differ\Diff;
 
 use function Functional\sort;
-use function Differ\Formatter\formatter;
+use function Differ\Formatter\formatting;
 use function Differ\Parser\parser;
 
 const UNCHANGED = 'unchanged';
@@ -14,12 +14,22 @@ const NESTED = 'nested';
 
 function genDiff(string $file1, string $file2, string $format = 'stylish'): string
 {
-    $valueFile1 = parser($file1);
-    $valueFile2 = parser($file2);
+    $contentFile1 = getContents($file1);
+    $contentFile2 = getContents($file2);
+    $valueFile1 = parser($file1, $contentFile1);
+    $valueFile2 = parser($file2, $contentFile2);
     $valueDiff = buildDiff($valueFile1, $valueFile2);
-    return formatter($valueDiff, $format);
+    return formatting($valueDiff, $format);
 }
+function getContents(string $path): string
+{
+    if (!file_exists($path)) {
+        throw new \Exception("Invalid file path: {$path}");
+    }
 
+    $content = file_get_contents($path);
+    return $content;
+}
 function buildDiff(array $first, array $second): array
 {
     $uniqueKeys = array_unique(array_merge(array_keys($first), array_keys($second)));

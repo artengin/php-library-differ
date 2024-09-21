@@ -4,27 +4,12 @@ namespace Differ\Parser;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parser(string $path): array
+function parser(string $path, string $content): array
 {
-    if (!file_exists($path)) {
-        throw new \Exception("Invalid file path: {$path}");
-    }
-
-    $content = file_get_contents($path);
     $extension = pathinfo($path, PATHINFO_EXTENSION);
     return match ($extension) {
-        "json" => jsonFileParse($content),
-        "yml", "yaml" => yamlFileParse($content),
+        "json" => json_decode($content, true, 512, JSON_THROW_ON_ERROR),
+        "yml", "yaml" => Yaml::parse($content),
         default => throw new \Exception("Format {$extension} not supported."),
     };
-}
-
-function jsonFileParse(mixed $data): array
-{
-    return json_decode($data, true, 512, JSON_THROW_ON_ERROR);
-}
-
-function yamlFileParse(mixed $data): array
-{
-    return Yaml::parse($data);
 }

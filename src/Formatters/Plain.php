@@ -2,11 +2,11 @@
 
 namespace Differ\Formatters\Plain;
 
-use const Differ\Differ\ADDED;
-use const Differ\Differ\CHANGED;
-use const Differ\Differ\DELETED;
-use const Differ\Differ\NESTED;
-use const Differ\Differ\UNCHANGED;
+use const Differ\Diff\ADDED;
+use const Differ\Diff\CHANGED;
+use const Differ\Diff\DELETED;
+use const Differ\Diff\NESTED;
+use const Differ\Diff\UNCHANGED;
 
 const COMPARE_TEXT_MAP = [
     ADDED => 'added',
@@ -22,7 +22,7 @@ function format(array $data): string
     return rtrim($result, " \n");
 }
 
-function iter(mixed $value, array $acc = [])
+function iter(mixed $value, array $acc = []): string
 {
     if (!is_array($value)) {
         return toString($value);

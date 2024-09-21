@@ -2,11 +2,11 @@
 
 namespace Differ\Formatters\Stylish;
 
-use const Differ\Differ\ADDED;
-use const Differ\Differ\DELETED;
-use const Differ\Differ\CHANGED;
-use const Differ\Differ\NESTED;
-use const Differ\Differ\UNCHANGED;
+use const Differ\Diff\ADDED;
+use const Differ\Diff\DELETED;
+use const Differ\Diff\CHANGED;
+use const Differ\Diff\NESTED;
+use const Differ\Diff\UNCHANGED;
 
 const SPACECOUNT = 4;
 const REPLACER = ' ';
@@ -71,7 +71,7 @@ function format(array $data, int $depth = 1): string
 }
 
 
-function stringify(mixed $value, int $depth)
+function stringify(mixed $value, int $depth): string
 {
     if (!is_array($value)) {
         return toString($value);
