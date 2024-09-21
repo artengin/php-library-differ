@@ -13,6 +13,9 @@ class DiffTest extends TestCase
 
     protected function getExpectedPath(string $formatter): string
     {
+        if ($formatter == "default") {
+            return "{$this->fixturesPath}/expected-stylish.txt";
+        }
         return "{$this->fixturesPath}/expected-{$formatter}.txt";
     }
 
@@ -27,7 +30,11 @@ class DiffTest extends TestCase
     public static function extensionProvider(): array
     {
         return [
-            'stylish format, json - json' => [
+            'default, json - json' => [
+                'default',
+                'json',
+                'json',
+            ],'stylish format, json - json' => [
                 'stylish',
                 'json',
                 'json',
@@ -80,6 +87,10 @@ class DiffTest extends TestCase
         $first = $this->getFirstFilePath($firstFileType);
         $second = $this->getSecondFilePath($secondFileType);
         $expected = file_get_contents($this->getExpectedPath($formatter));
-        $this->assertEquals($expected, genDiff($first, $second, $formatter));
+        if ($formatter == "default") {
+            $this->assertEquals($expected, genDiff($first, $second));
+        } else {
+            $this->assertEquals($expected, genDiff($first, $second, $formatter));
+        }
     }
 }
