@@ -27,14 +27,15 @@ class DiffTest extends TestCase
     {
         return "{$this->fixturesPath}/file2.{$type}";
     }
-    public static function extensionProvider(): array
+    public static function dataProvider(): array
     {
         return [
             'default, json - json' => [
                 'default',
                 'json',
                 'json',
-            ],'stylish format, json - json' => [
+            ],
+            'stylish format, json - json' => [
                 'stylish',
                 'json',
                 'json',
@@ -81,7 +82,7 @@ class DiffTest extends TestCase
             ],
         ];
     }
-    #[DataProvider('extensionProvider')]
+    #[DataProvider('dataProvider')]
     public function testDiff(string $formatter, string $firstFileType, string $secondFileType): void
     {
         $first = $this->getFirstFilePath($firstFileType);
