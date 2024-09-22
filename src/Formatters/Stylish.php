@@ -2,11 +2,11 @@
 
 namespace Differ\Formatters\Stylish;
 
-use const Differ\Diff\ADDED;
-use const Differ\Diff\DELETED;
-use const Differ\Diff\CHANGED;
-use const Differ\Diff\NESTED;
-use const Differ\Diff\UNCHANGED;
+use const Differ\Differ\ADDED;
+use const Differ\Differ\DELETED;
+use const Differ\Differ\CHANGED;
+use const Differ\Differ\NESTED;
+use const Differ\Differ\UNCHANGED;
 
 const SPACECOUNT = 4;
 const REPLACER = ' ';

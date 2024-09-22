@@ -5,7 +5,7 @@ namespace Converter\Phpunit\Tests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-use function Differ\Diff\genDiff;
+use function Differ\Differ\genDiff;
 
 class DiffTest extends TestCase
 {

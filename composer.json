@@ -8,7 +8,7 @@
             "Hexlet\\Code\\": "src/"
         },
         "files": [
-            "src/Diff.php",
+            "src/Differ.php",
             "src/Parser.php",
             "src/Formatter.php",
             "src/Formatters/Json.php",

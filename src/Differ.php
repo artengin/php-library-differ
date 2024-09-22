@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Diff;
+namespace Differ\Differ;
 
 use function Functional\sort;
 use function Differ\Formatter\formatting;
