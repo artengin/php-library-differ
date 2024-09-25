@@ -94,8 +94,10 @@ function stringify(mixed $value, int $depth): string
 
 function toString(mixed $value): string
 {
-    if (is_null($value)) {
-        return 'null';
-    }
-    return trim(var_export($value, true), "'");
+    return match (true) {
+        $value === true => 'true',
+        $value === false => 'false',
+        is_null($value) => 'null',
+        default => trim((string) $value, "'")
+    };
 }

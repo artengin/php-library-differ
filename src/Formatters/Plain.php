@@ -22,17 +22,17 @@ function render(array $data): string
     return rtrim($result, " \n");
 }
 
-function iter(mixed $value, array $acc = []): string
+function iter(array $value, array $acc = []): string
 {
-    if (!is_array($value)) {
-        return toString($value);
-    }
+    $func = function ($val) use ($acc) {
+        if (!is_array($val)) {
+            return toString($val);
+        }
 
-    if (!array_key_exists(0, $value) && !array_key_exists('type', $value)) {
-        return toString($value);
-    }
+        if (!array_key_exists(0, $val) && !array_key_exists('type', $val)) {
+            return toString($val);
+        }
 
-    $fun = function ($val) use ($acc) {
         $key = $val['key'];
         $compare = $val['type'];
         $compareText = COMPARE_TEXT_MAP[$compare];
@@ -43,7 +43,7 @@ function iter(mixed $value, array $acc = []): string
                 "Property '%s' was %s with value: %s\n",
                 implode('.', $accNew),
                 $compareText,
-                iter($val['value'], $accNew),
+                toString($val['value']),
             ),
             DELETED => sprintf(
                 "Property '%s' was %s\n",
@@ -54,16 +54,15 @@ function iter(mixed $value, array $acc = []): string
                 "Property '%s' was %s. From %s to %s\n",
                 implode('.', $accNew),
                 $compareText,
-                iter($val['value1'], $accNew),
-                iter($val['value2'], $accNew),
+                toString($val['value1']),
+                toString($val['value2']),
             ),
             NESTED => iter($val['children'], $accNew),
             default => null,
         };
     };
 
-    $result = array_map($fun, $value);
-
+    $result = array_map($func, $value);
     return implode($result);
 }
 
