@@ -75,6 +75,6 @@ function toString(mixed $value): string
         is_null($value) => 'null',
         is_array($value) || is_object($value) => '[complex value]',
         is_string($value) => "'{$value}'",
-        default => trim($value, "'")
+        default => trim((string) $value, "'")
     };
 }
