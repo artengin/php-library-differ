@@ -18,19 +18,19 @@ const COMPARE_TEXT_SYMBOL_MAP = [
     UNCHANGED => ' ',
 ];
 
-function format(array $data, int $depth = 1): string
+function render(array $data, int $depth = 1): string
 {
     $fun = function ($value) use ($depth) {
         $indentSize = ($depth * SPACECOUNT) - 2;
         $currentIndent = str_repeat(REPLACER, $indentSize);
 
-        $compare = $value['compare'];
+        $compare = $value['type'];
         $key = $value['key'];
         $compareSymbol = COMPARE_TEXT_SYMBOL_MAP[$compare];
 
         if ($compare === CHANGED) {
-            $val1 = stringify($value['valueFirst'], $depth + 1);
-            $val2 = stringify($value['valueSecond'], $depth + 1);
+            $val1 = stringify($value['value1'], $depth + 1);
+            $val2 = stringify($value['value2'], $depth + 1);
             $result1 = sprintf(
                 "%s%s %s: %s\n",
                 $currentIndent,
@@ -49,7 +49,7 @@ function format(array $data, int $depth = 1): string
         }
 
         if ($compare === NESTED) {
-            $val = format($value['value'], $depth + 1);
+            $val = render($value['children'], $depth + 1);
         } else {
             $val = stringify($value['value'], $depth + 1);
         }

@@ -4,6 +4,8 @@
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
 
+use function Differ\Differ\genDiff;
+
 if (file_exists($autoloadPath1)) {
     require_once $autoloadPath1;
 } else {
@@ -30,5 +32,5 @@ $firsFilePath = $args['<firstFile>'];
 $secondFilePath = $args['<secondFile>'];
 $format = $args['--format'];
 
-$diff = Differ\Differ\genDiff($firsFilePath, $secondFilePath, $format);
+$diff = genDiff($firsFilePath, $secondFilePath, $format);
 print_r($diff);

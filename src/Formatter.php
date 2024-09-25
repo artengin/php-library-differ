@@ -6,12 +6,12 @@ use Differ\Formatters\Stylish;
 use Differ\Formatters\Json;
 use Differ\Formatters\Plain;
 
-function formatting(array $diff, string $format): string
+function format(array $diff, string $format): string
 {
     return match ($format) {
-        'stylish' => Stylish\format($diff),
-        'json' => Json\format($diff),
-        'plain' => Plain\format($diff),
+        'stylish' => Stylish\render($diff),
+        'json' => Json\render($diff),
+        'plain' => Plain\render($diff),
         default => throw new \Exception(sprintf('Unknown data format: "%s"!', $format)),
     };
 }

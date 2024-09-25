@@ -16,7 +16,7 @@ const COMPARE_TEXT_MAP = [
     NESTED => '[complex value]',
 ];
 
-function format(array $data): string
+function render(array $data): string
 {
     $result = iter($data);
     return rtrim($result, " \n");
@@ -28,13 +28,13 @@ function iter(mixed $value, array $acc = []): string
         return toString($value);
     }
 
-    if (!array_key_exists(0, $value) && !array_key_exists('compare', $value)) {
+    if (!array_key_exists(0, $value) && !array_key_exists('type', $value)) {
         return toString($value);
     }
 
     $fun = function ($val) use ($acc) {
         $key = $val['key'];
-        $compare = $val['compare'];
+        $compare = $val['type'];
         $compareText = COMPARE_TEXT_MAP[$compare];
         $accNew = [...$acc, ...[$key]];
 
@@ -54,10 +54,10 @@ function iter(mixed $value, array $acc = []): string
                 "Property '%s' was %s. From %s to %s\n",
                 implode('.', $accNew),
                 $compareText,
-                iter($val['valueFirst'], $accNew),
-                iter($val['valueSecond'], $accNew),
+                iter($val['value1'], $accNew),
+                iter($val['value2'], $accNew),
             ),
-            NESTED => iter($val['value'], $accNew),
+            NESTED => iter($val['children'], $accNew),
             default => null,
         };
     };
@@ -69,14 +69,12 @@ function iter(mixed $value, array $acc = []): string
 
 function toString(mixed $value): string
 {
-    if (is_null($value)) {
-        return 'null';
-    }
-    if (is_array($value)) {
-        return '[complex value]';
-    }
-    if (is_string($value)) {
-        return "'{$value}'";
-    }
-    return trim(var_export($value, true), "'");
+    return match (true) {
+        $value === true => 'true',
+        $value === false => 'false',
+        is_null($value) => 'null',
+        is_array($value) || is_object($value) => '[complex value]',
+        is_string($value) => "'{$value}'",
+        default => trim($value, "'")
+    };
 }

@@ -3,7 +3,7 @@
 namespace Differ\Differ;
 
 use function Functional\sort;
-use function Differ\Formatter\formatting;
+use function Differ\Formatter\format;
 use function Differ\Parser\parser;
 
 const UNCHANGED = 'unchanged';
@@ -14,21 +14,25 @@ const NESTED = 'nested';
 
 function genDiff(string $file1, string $file2, string $format = 'stylish'): string
 {
-    $contentFile1 = getContents($file1);
-    $contentFile2 = getContents($file2);
-    $valueFile1 = parser($file1, $contentFile1);
-    $valueFile2 = parser($file2, $contentFile2);
+    ['extension' => $extension1, 'content' => $contentFile1] = getContents($file1);
+    ['extension' => $extension2, 'content' => $contentFile2]  = getContents($file2);
+
+    $valueFile1 = parser($extension1, $contentFile1);
+    $valueFile2 = parser($extension2, $contentFile2);
+
     $valueDiff = buildDiff($valueFile1, $valueFile2);
-    return formatting($valueDiff, $format);
+    return format($valueDiff, $format);
 }
-function getContents(string $path): string
+function getContents(string $path): array
 {
     if (!file_exists($path)) {
         throw new \Exception("Invalid file path: {$path}");
     }
 
-    $content = file_get_contents($path);
-    return $content;
+    return [
+        'extension' => pathinfo($path, PATHINFO_EXTENSION),
+        'content' => file_get_contents($path),
+    ];
 }
 function buildDiff(array $first, array $second): array
 {
@@ -46,41 +50,41 @@ function buildDiff(array $first, array $second): array
             (is_array($valueSecond) && !array_is_list($valueSecond))
         ) {
             return [
-                'compare' => NESTED,
                 'key' => $key,
-                'value' => buildDiff($valueFirst, $valueSecond),
+                'type' => NESTED,
+                'children' => buildDiff($valueFirst, $valueSecond),
             ];
         }
 
         if (!array_key_exists($key, $first)) {
             return [
-                'compare' => ADDED,
                 'key' => $key,
+                'type' => ADDED,
                 'value' => $valueSecond,
             ];
         }
 
         if (!array_key_exists($key, $second)) {
             return [
-                'compare' => DELETED,
                 'key' => $key,
+                'type' => DELETED,
                 'value' => $valueFirst,
             ];
         }
 
         if ($valueFirst === $valueSecond) {
             return [
-                'compare' => UNCHANGED,
                 'key' => $key,
+                'type' => UNCHANGED,
                 'value' => $valueFirst,
             ];
         }
 
         return [
-            'compare' => CHANGED,
             'key' => $key,
-            'valueFirst' => $valueFirst,
-            'valueSecond' => $valueSecond,
+            'type' => CHANGED,
+            'value1' => $valueFirst,
+            'value2' => $valueSecond,
         ];
     }, $sortedArray);
 }
