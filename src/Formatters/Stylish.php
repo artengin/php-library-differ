@@ -18,19 +18,33 @@ const COMPARE_TEXT_SYMBOL_MAP = [
     UNCHANGED => ' ',
 ];
 
-function render(array $data, int $depth = 1): string
+function render(array $data): string
 {
-    $fun = function ($value) use ($depth) {
+    $result = iter($data);
+    return $result;
+}
+
+function iter(array $value, int $depth = 1): string
+{
+    $func = function ($val) use ($depth) {
+        if (!is_array($val)) {
+            return toString($val);
+        }
+
+        if (!array_key_exists(0, $val) && !array_key_exists('type', $val)) {
+            return toString($val);
+        }
+
         $indentSize = ($depth * SPACECOUNT) - 2;
         $currentIndent = str_repeat(REPLACER, $indentSize);
-
-        $compare = $value['type'];
-        $key = $value['key'];
+        $compare = $val['type'];
+        $key = $val['key'];
+        $depthNesed = $depth + 1;
         $compareSymbol = COMPARE_TEXT_SYMBOL_MAP[$compare];
 
         if ($compare === CHANGED) {
-            $val1 = stringify($value['value1'], $depth + 1);
-            $val2 = stringify($value['value2'], $depth + 1);
+            $val1 = stringify($val['value1'], $depthNesed);
+            $val2 = stringify($val['value2'], $depthNesed);
             $result1 = sprintf(
                 "%s%s %s: %s\n",
                 $currentIndent,
@@ -49,9 +63,9 @@ function render(array $data, int $depth = 1): string
         }
 
         if ($compare === NESTED) {
-            $val = render($value['children'], $depth + 1);
+            $val = iter($val['children'], $depthNesed);
         } else {
-            $val = stringify($value['value'], $depth + 1);
+            $val = stringify($val['value'], $depthNesed);
         }
         $result3 = sprintf(
             "%s%s %s: %s\n",
@@ -62,22 +76,23 @@ function render(array $data, int $depth = 1): string
         );
         return $result3;
     };
-    $result = array_map($fun, $data);
 
+    $result = array_map($func, $value);
     $closeBracketIndentSize = $depth * SPACECOUNT;
     $closeBracketIndent = $closeBracketIndentSize > 0 ? str_repeat(REPLACER, $closeBracketIndentSize - SPACECOUNT) : '';
 
     return "{\n" . implode($result) . "{$closeBracketIndent}}";
 }
 
-
 function stringify(mixed $value, int $depth): string
 {
     if (!is_array($value)) {
         return toString($value);
     }
+
     $indentSize = $depth * SPACECOUNT;
     $currentIndent = str_repeat(REPLACER, $indentSize);
+
     $fun = function ($key, $val) use ($depth, $currentIndent) {
         return sprintf(
             "%s%s: %s\n",
@@ -86,9 +101,10 @@ function stringify(mixed $value, int $depth): string
             stringify($val, $depth + 1),
         );
     };
-    $result = array_map($fun, array_keys($value), $value);
 
+    $result = array_map($fun, array_keys($value), $value);
     $closeBracketIndent = str_repeat(REPLACER, $indentSize - SPACECOUNT);
+
     return "{\n" . implode($result) . "{$closeBracketIndent}}";
 }
 

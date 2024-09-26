@@ -19,10 +19,10 @@ const COMPARE_TEXT_MAP = [
 function render(array $data): string
 {
     $result = iter($data);
-    return rtrim($result, " \n");
+    return rtrim(implode($result), " \n");
 }
 
-function iter(array $value, array $acc = []): string
+function iter(array $value, array $acc = []): array
 {
     $func = function ($val) use ($acc) {
         if (!is_array($val)) {
@@ -57,13 +57,13 @@ function iter(array $value, array $acc = []): string
                 toString($val['value1']),
                 toString($val['value2']),
             ),
-            NESTED => iter($val['children'], $accNew),
+            NESTED => implode(iter($val['children'], $accNew)),
             default => null,
         };
     };
 
     $result = array_map($func, $value);
-    return implode($result);
+    return $result;
 }
 
 function toString(mixed $value): string
