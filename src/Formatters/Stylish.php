@@ -35,52 +35,17 @@ function iter(array $value, int $depth = 1): string
             return toString($val);
         }
 
-        $indentSize = ($depth * SPACECOUNT) - 2;
-        $currentIndent = str_repeat(REPLACER, $indentSize);
         $compare = $val['type'];
-        $key = $val['key'];
-        $depthNested = $depth + 1;
+        $delete = COMPARE_TEXT_SYMBOL_MAP[DELETED];
+        $add = COMPARE_TEXT_SYMBOL_MAP[ADDED];
         $compareSymbol = COMPARE_TEXT_SYMBOL_MAP[$compare];
+        $key = $val['key'];
 
-        if ($compare === CHANGED) {
-            $valChanged1 = stringify($val['value1'], $depthNested);
-            $valChanged2 = stringify($val['value2'], $depthNested);
-            $resultChanged1 = sprintf(
-                "%s%s %s: %s\n",
-                $currentIndent,
-                COMPARE_TEXT_SYMBOL_MAP[DELETED],
-                $key,
-                $valChanged1,
-            );
-            $resultChanged2 = sprintf(
-                "%s%s %s: %s\n",
-                $currentIndent,
-                COMPARE_TEXT_SYMBOL_MAP[ADDED],
-                $key,
-                $valChanged2,
-            );
-            return $resultChanged1 . $resultChanged2;
-        } elseif ($compare === NESTED) {
-            $valNested = iter($val['children'], $depthNested);
-            $resultNested = sprintf(
-                "%s%s %s: %s\n",
-                $currentIndent,
-                $compareSymbol,
-                $key,
-                $valNested,
-            );
-            return $resultNested;
-        } else {
-            $valUnchanged = stringify($val['value'], $depthNested);
-            $resultUnchanged = sprintf(
-                "%s%s %s: %s\n",
-                $currentIndent,
-                $compareSymbol,
-                $key,
-                $valUnchanged,
-            );
-            return $resultUnchanged;
-        }
+        return match ($compare) {
+            CHANGED => structure($val['value1'], $key, $delete, $depth) . structure($val['value2'], $key, $add, $depth),
+            NESTED => structure(iter($val['children'], $depth + 1), $key, $compareSymbol, $depth),
+            default => structure($val['value'], $key, $compareSymbol, $depth),
+        };
     };
 
     $result = array_map($func, $value);
@@ -90,7 +55,23 @@ function iter(array $value, int $depth = 1): string
     return "{\n" . implode($result) . "{$closeBracketIndent}}";
 }
 
-function stringify(mixed $value, int $depth): string
+function structure(mixed $value, string $key, string $compareSymbol, int $depth): string
+{
+    $indentSize = ($depth * SPACECOUNT) - 2;
+    $currentIndent = str_repeat(REPLACER, $indentSize);
+    $depthNested = $depth + 1;
+    $valueStructured = depthStructuring($value, $depthNested);
+
+    $result = sprintf(
+        "%s%s %s: %s\n",
+        $currentIndent,
+        $compareSymbol,
+        $key,
+        $valueStructured,
+    );
+    return $result;
+}
+function depthStructuring(mixed $value, int $depth): string
 {
     if (!is_array($value)) {
         return toString($value);
@@ -104,7 +85,7 @@ function stringify(mixed $value, int $depth): string
             "%s%s: %s\n",
             $currentIndent,
             $key,
-            stringify($val, $depth + 1),
+            depthStructuring($val, $depth + 1),
         );
     };
 
