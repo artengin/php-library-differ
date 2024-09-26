@@ -39,42 +39,48 @@ function iter(array $value, int $depth = 1): string
         $currentIndent = str_repeat(REPLACER, $indentSize);
         $compare = $val['type'];
         $key = $val['key'];
-        $depthNesed = $depth + 1;
+        $depthNested = $depth + 1;
         $compareSymbol = COMPARE_TEXT_SYMBOL_MAP[$compare];
 
         if ($compare === CHANGED) {
-            $val1 = stringify($val['value1'], $depthNesed);
-            $val2 = stringify($val['value2'], $depthNesed);
-            $result1 = sprintf(
+            $valChanged1 = stringify($val['value1'], $depthNested);
+            $valChanged2 = stringify($val['value2'], $depthNested);
+            $resultChanged1 = sprintf(
                 "%s%s %s: %s\n",
                 $currentIndent,
                 COMPARE_TEXT_SYMBOL_MAP[DELETED],
                 $key,
-                $val1,
+                $valChanged1,
             );
-            $result2 = sprintf(
+            $resultChanged2 = sprintf(
                 "%s%s %s: %s\n",
                 $currentIndent,
                 COMPARE_TEXT_SYMBOL_MAP[ADDED],
                 $key,
-                $val2,
+                $valChanged2,
             );
-            return $result1 . $result2;
-        }
-
-        if ($compare === NESTED) {
-            $val = iter($val['children'], $depthNesed);
+            return $resultChanged1 . $resultChanged2;
+        } elseif ($compare === NESTED) {
+            $valNested = iter($val['children'], $depthNested);
+            $resultNested = sprintf(
+                "%s%s %s: %s\n",
+                $currentIndent,
+                $compareSymbol,
+                $key,
+                $valNested,
+            );
+            return $resultNested;
         } else {
-            $val = stringify($val['value'], $depthNesed);
+            $valUnchanged = stringify($val['value'], $depthNested);
+            $resultUnchanged = sprintf(
+                "%s%s %s: %s\n",
+                $currentIndent,
+                $compareSymbol,
+                $key,
+                $valUnchanged,
+            );
+            return $resultUnchanged;
         }
-        $result3 = sprintf(
-            "%s%s %s: %s\n",
-            $currentIndent,
-            $compareSymbol,
-            $key,
-            $val,
-        );
-        return $result3;
     };
 
     $result = array_map($func, $value);
