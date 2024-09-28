@@ -21,12 +21,9 @@ function genDiff(string $file1, string $file2, string $format = 'stylish'): stri
     $valueFile2 = parser($extension2, $contentFile2);
 
     $valueDiff = buildDiff($valueFile1, $valueFile2);
+    $valueDiffWithRoot = addingRootNode($valueDiff);
 
-    $testt = [
-        'type' => 'root',
-        'children' => $valueDiff,
-    ];
-    return format($testt, $format);
+    return format($valueDiffWithRoot, $format);
 }
 function getContents(string $path): array
 {
@@ -92,4 +89,9 @@ function buildDiff(array $first, array $second): array
             'value2' => $valueSecond,
         ];
     }, $sortedArray);
+}
+
+function addingRootNode(array $value): array
+{
+    return ['type' => 'root', 'children' => $value];
 }
