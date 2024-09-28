@@ -20,7 +20,7 @@ const COMPARE_TEXT_SYMBOL_MAP = [
 
 function render(array $data): string
 {
-    $result = iter($data);
+    $result = iter($data['children']);
     return $result;
 }
 

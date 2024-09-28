@@ -18,13 +18,14 @@ const COMPARE_TEXT_MAP = [
 
 function render(array $data): string
 {
-    $result = iter($data);
+    $result = iter($data['children']);
     return rtrim(implode($result), " \n");
 }
 
 function iter(array $value, array $acc = []): array
 {
     $func = function ($val) use ($acc) {
+
         if (!is_array($val)) {
             return toString($val);
         }

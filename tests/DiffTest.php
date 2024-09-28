@@ -27,68 +27,58 @@ class DiffTest extends TestCase
     public static function dataProvider(): array
     {
         return [
-            'stylish format, json - json' => [
-                'stylish',
+            'json - json' => [
                 'json',
                 'json',
             ],
-            'stylish format, yml - json' => [
-                'stylish',
-                'yml',
-                'json',
-            ],
-            'stylish format, yml - yml' => [
-                'stylish',
-                'yml',
-                'yml',
-            ],
-            'plain format, json - json' => [
-                'plain',
-                'json',
-                'json',
-            ],
-            'plain format, json - yml' => [
-                'plain',
+            'json - yml' => [
                 'json',
                 'yml',
             ],
-            'plain format, yml - yml' => [
-                'plain',
-                'yml',
-                'yml',
-            ],
-            'json format, json - json' => [
-                'json',
-                'json',
-                'json',
-            ],
-            'json format, json - yml' => [
-                'json',
-                'json',
-                'yml',
-            ],
-            'json format, yml - yml' => [
-                'json',
+            'yml - yml' => [
                 'yml',
                 'yml',
             ],
         ];
     }
+
     #[DataProvider('dataProvider')]
-    public function testDiff(string $formatter, string $firstFileType, string $secondFileType): void
-    {
-        $first = $this->getFirstFilePath($firstFileType);
-        $second = $this->getSecondFilePath($secondFileType);
-        $expected = file_get_contents($this->getExpectedPath($formatter));
-        $this->assertEquals($expected, genDiff($first, $second, $formatter));
-    }
-    #[DataProvider('dataProvider')]
-    public function testDiffDefault(string $formatter, string $firstFileType, string $secondFileType): void
+    public function testDefault(string $firstFileType, string $secondFileType): void
     {
         $formatter = "stylish";
         $first = $this->getFirstFilePath($firstFileType);
         $second = $this->getSecondFilePath($secondFileType);
         $expected = file_get_contents($this->getExpectedPath($formatter));
         $this->assertEquals($expected, genDiff($first, $second));
+    }
+
+    #[DataProvider('dataProvider')]
+    public function testStylish(string $firstFileType, string $secondFileType): void
+    {
+        $formatter = "stylish";
+        $first = $this->getFirstFilePath($firstFileType);
+        $second = $this->getSecondFilePath($secondFileType);
+        $expected = file_get_contents($this->getExpectedPath($formatter));
+        $this->assertEquals($expected, genDiff($first, $second, $formatter));
+    }
+
+    #[DataProvider('dataProvider')]
+    public function testJson(string $firstFileType, string $secondFileType): void
+    {
+        $formatter = "json";
+        $first = $this->getFirstFilePath($firstFileType);
+        $second = $this->getSecondFilePath($secondFileType);
+        $expected = file_get_contents($this->getExpectedPath($formatter));
+        $this->assertEquals($expected, genDiff($first, $second, $formatter));
+    }
+
+    #[DataProvider('dataProvider')]
+    public function testPlain(string $firstFileType, string $secondFileType): void
+    {
+        $formatter = "plain";
+        $first = $this->getFirstFilePath($firstFileType);
+        $second = $this->getSecondFilePath($secondFileType);
+        $expected = file_get_contents($this->getExpectedPath($formatter));
+        $this->assertEquals($expected, genDiff($first, $second, $formatter));
     }
 }

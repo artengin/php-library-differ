@@ -21,7 +21,12 @@ function genDiff(string $file1, string $file2, string $format = 'stylish'): stri
     $valueFile2 = parser($extension2, $contentFile2);
 
     $valueDiff = buildDiff($valueFile1, $valueFile2);
-    return format($valueDiff, $format);
+
+    $testt = [
+        'type' => 'root',
+        'children' => $valueDiff,
+    ];
+    return format($testt, $format);
 }
 function getContents(string $path): array
 {
